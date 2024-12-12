@@ -1,15 +1,33 @@
 import { getAllData } from "@/services/serviceOperations";
 
 export default async function handler(req, res) {
+  const tableName = "GeneralTopPageBanner";
+
   if (req.method === "GET") {
     try {
-      const data = await getAllData();
-      res.status(200).json(data);
+      const data = await getAllData(tableName);
+
+      if (!data || data.length === 0) {
+        return res.status(404).json({
+          status: "error",
+          message: "Veri bulunamadı.",
+        });
+      }
+
+      return res.status(200).json({
+        status: "success",
+        data: data,
+      });
     } catch (error) {
-      res.status(500).json({ message: "Veri alınırken hata oluştu" });
+      return res.status(500).json({
+        status: "error",
+        message: error.message,
+      });
     }
-  } else {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+
+  res.setHeader("Allow", ["GET"]);
+  return res
+    .status(405)
+    .json({ status: "error", message: `Metod ${req.method} desteklenmiyor.` });
 }

@@ -19,11 +19,13 @@ export default function Anasayfa() {
     const bannerVerisiniCek = async () => {
       try {
         const yanit = await getAPI("/other/generalTopPageBanner");
-        if (yanit.data) {
-          setBannerVerisi(yanit.data[0]);
+        if (yanit.data && yanit.data[0]) {
+          setBannerVerisi(yanit.data[0]); // Veriyi burada düzgün bir şekilde ayarlıyoruz
+        } else {
+          toast.error("Banner verisi alınamadı");
         }
       } catch (hata) {
-        toast.error("Banner verisi alınamadı");
+        toast.error("Banner verisi alınırken hata oluştu");
       }
     };
     bannerVerisiniCek();
