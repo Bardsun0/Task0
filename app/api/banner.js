@@ -1,28 +1,48 @@
-// GET /api/banner
-export default async function handler(req, res) {
+import { NextApiRequest, NextApiResponse } from "next";
+import {
+  getAllData,
+  createNewData,
+  deleteDataAll,
+} from "@/services/serviceOperations";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "GET") {
-    const bannerData = {
-      mainText: "Welcome to our website!",
-      mainTextColor: "#000000",
-      underText: "Explore our features",
-      underTextColor: "#333333",
-      buttonColor: "#0070f3",
-      backgroundColor: "#f0f0f0",
-    };
-    res.status(200).json(bannerData);
-  } else if (req.method === "POST") {
-    // Gelen POST isteğinden veriyi alıp güncelle
-    const {
-      mainText,
-      mainTextColor,
-      underText,
-      underTextColor,
-      buttonColor,
-      backgroundColor,
-    } = req.body;
-    // Burada veri tabanı işlemleri gerçekleştirilir
-    res.status(200).json({ message: "Banner updated successfully" });
-  } else {
-    res.status(405).json({ message: "Method Not Allowed" });
+    try {
+      const data = await getAllData("GeneralTopPageBanner");
+
+      if (!data || data.length === 0) {
+        return res
+          .status(404)
+          .json({ status: "error", message: "Banner verisi bulunamadı" });
+      }
+
+      return res.status(200).json({ status: "success", data: data[0] });
+    } catch (error) {
+      return res.status(500).json({ status: "error", error: error.message });
+    }
   }
+
+  if (req.method === "POST") {
+    try {
+      // Önce mevcut bannerları sil
+      await deleteDataAll("GeneralTopPageBanner");
+
+      // Yeni banner oluştur
+      const newBanner = await createNewData("GeneralTopPageBanner", req.body);
+
+      return res.status(200).json({
+        status: "success",
+        message: "Banner başarıyla güncellendi",
+        data: newBanner,
+      });
+    } catch (error) {
+      return res.status(500).json({ status: "error", error: error.message });
+    }
+  }
+
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).end(`Method ${req.method} İzin Verilmedi`);
 }
