@@ -107,7 +107,5 @@ Mevcut bir banner'ı siler.
 4. **Yeni Banner Oluşturma:**
    - Formu doldurun ve POST isteği ile yeni bir banner oluşturun.
 
-## Ekran Görüntüsü
-Ekran görüntülerini burada paylaşabilirsiniz (isteğe bağlı).
 
 
