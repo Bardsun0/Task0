@@ -21,6 +21,8 @@ model Banner {
   underTextColor  String
   buttonColor     String
   backgroundColor String
+  buttonText      String?  // Yeni eklenen alan
+  isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

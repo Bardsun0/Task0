@@ -48,6 +48,22 @@ export default function Anasayfa() {
     }
   };
 
+  const silmeIslemi = async (id) => {
+    try {
+      const yanit = await postAPI("/dashboard/admin/generalTopPageBanner", {
+        id, // Silinecek banner'ın id'sini gönderiyoruz
+      });
+
+      if (yanit.status === "success") {
+        toast.success("Banner başarıyla silindi!");
+      } else {
+        toast.error(yanit.error || "Silme işlemi başarısız");
+      }
+    } catch (hata) {
+      toast.error("Banner silinirken bir hata oluştu");
+    }
+  };
+
   const girdiDegisikliginiIşle = (e) => {
     const { name, value } = e.target;
     setBannerVerisi((onceki) => ({
@@ -57,61 +73,80 @@ export default function Anasayfa() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <ToastContainer />
-      <h1 className="text-2xl font-bold mb-4">Genel Banner Yapılandırması</h1>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-8">
+        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          Banner Yapılandırması
+        </h1>
 
-      <div className="space-y-4">
-        <input
-          name="mainText"
-          value={bannerVerisi.mainText}
-          onChange={girdiDegisikliginiIşle}
-          placeholder="Ana Metin"
-          className="w-full p-2 border rounded"
-        />
-        <input
-          name="mainTextColor"
-          type="color"
-          value={bannerVerisi.mainTextColor}
-          onChange={girdiDegisikliginiIşle}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          name="underText"
-          value={bannerVerisi.underText}
-          onChange={girdiDegisikliginiIşle}
-          placeholder="Alt Metin"
-          className="w-full p-2 border rounded"
-        />
-        <input
-          name="underTextColor"
-          type="color"
-          value={bannerVerisi.underTextColor}
-          onChange={girdiDegisikliginiIşle}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          name="buttonColor"
-          type="color"
-          value={bannerVerisi.buttonColor}
-          onChange={girdiDegisikliginiIşle}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          name="backgroundColor"
-          type="color"
-          value={bannerVerisi.backgroundColor}
-          onChange={girdiDegisikliginiIşle}
-          className="w-full p-2 border rounded"
-        />
+        <div className="space-y-4">
+          {/* Mevcut input alanları */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Ana Metin
+              </label>
+              <input
+                name="mainText"
+                value={bannerVerisi.mainText}
+                onChange={girdiDegisikliginiIşle}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <input
+                name="mainTextColor"
+                type="color"
+                value={bannerVerisi.mainTextColor}
+                onChange={girdiDegisikliginiIşle}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <input
+                name="underText"
+                value={bannerVerisi.underText}
+                onChange={girdiDegisikliginiIşle}
+                placeholder="Alt Metin"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <input
+                name="underTextColor"
+                type="color"
+                value={bannerVerisi.underTextColor}
+                onChange={girdiDegisikliginiIşle}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <input
+                name="buttonColor"
+                type="color"
+                value={bannerVerisi.buttonColor}
+                onChange={girdiDegisikliginiIşle}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <input
+                name="backgroundColor"
+                type="color"
+                value={bannerVerisi.backgroundColor}
+                onChange={girdiDegisikliginiIşle}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
 
-        <button
-          onClick={guncellemeIslemi}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Banner'ı Güncelle
-        </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={guncellemeIslemi}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition duration-300"
+            >
+              Güncelle
+            </button>
+            <button
+              onClick={silmeIslemi}
+              className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition duration-300"
+            >
+              Sil
+            </button>
+          </div>
+        </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

@@ -37,4 +37,3 @@ export const getAPI = async (
 
   return data;
 };
-

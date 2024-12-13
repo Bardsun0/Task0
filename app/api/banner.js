@@ -48,12 +48,10 @@ export default async function handler(req, res) {
 
     // Desteklenmeyen metodlar
     res.setHeader("Allow", ["GET", "POST"]);
-    return res
-      .status(405)
-      .json({
-        status: "error",
-        message: `Metod ${req.method} desteklenmiyor.`,
-      });
+    return res.status(405).json({
+      status: "error",
+      message: `Metod ${req.method} desteklenmiyor.`,
+    });
   } catch (error) {
     return res.status(500).json({
       status: "error",

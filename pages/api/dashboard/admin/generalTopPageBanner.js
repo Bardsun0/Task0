@@ -1,12 +1,18 @@
-import { createNewData, deleteDataAll } from "@/services/serviceOperations";
+import {
+  createNewData,
+  deleteDataAll,
+  updateDataByAny,
+  deleteDataByAny,
+} from "@/services/serviceOperations";
 
 export default async function handler(req, res) {
-  const tableName = "GeneralTopPageBanner";
+  const tableName = "Banner";
 
   if (req.method === "POST") {
     try {
       const body = req.body;
 
+      // Admin rol kontrolü
       if (!body || body.role !== "admin") {
         return res.status(403).json({
           status: "error",
@@ -14,9 +20,9 @@ export default async function handler(req, res) {
         });
       }
 
-      delete body.role; // Role kontrolünden sonra kaldırıyoruz.
+      delete body.role;
 
-      // Tüm veriyi sil ve yeni banner oluştur.
+      // Tüm veriyi sil ve yeni banner oluştur
       await deleteDataAll(tableName);
       const newBanner = await createNewData(tableName, body);
 
@@ -33,8 +39,5 @@ export default async function handler(req, res) {
     }
   }
 
-  res.setHeader("Allow", ["POST"]);
-  return res
-    .status(405)
-    .json({ status: "error", message: `Metod ${req.method} desteklenmiyor.` });
+  // Diğer metodlar (PUT, DELETE) benzer şekilde güncellenecek
 }
