@@ -110,6 +110,4 @@ Mevcut bir banner'ı siler.
 ## Ekran Görüntüsü
 Ekran görüntülerini burada paylaşabilirsiniz (isteğe bağlı).
 
-## Lisans
-Bu proje MIT Lisansı ile lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakınız.
 
