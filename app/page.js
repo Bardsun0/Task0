@@ -32,35 +32,67 @@ export default function Anasayfa() {
   }, []);
 
   const guncellemeIslemi = async () => {
+    if (!bannerVerisi.id) {
+      return toast.error("Güncelleme için geçerli bir ID bulunamadı.");
+    }
+
     try {
-      const yanit = await postAPI("/dashboard/admin/generalTopPageBanner", {
-        ...bannerVerisi,
-        role: "admin", // API işleyicisi için gerekli
-      });
+      const yanit = await fetch("/api/dashboard/admin/generalTopPageBanner", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: bannerVerisi.id, // Güncellenecek banner'ın ID'si
+          ...bannerVerisi,
+          role: "admin",
+        }),
+      }).then((res) => res.json());
 
       if (yanit.status === "success") {
         toast.success("Banner başarıyla güncellendi!");
       } else {
-        toast.error(yanit.error || "Güncelleme başarısız");
+        toast.error(yanit.error || "Güncelleme başarısız.");
       }
     } catch (hata) {
-      toast.error("Banner güncellenirken bir hata oluştu");
+      toast.error("Banner güncellenirken bir hata oluştu.");
     }
   };
+  const silmeIslemi = async () => {
+    if (!bannerVerisi.id) {
+      return toast.error("Silme işlemi için geçerli bir ID bulunamadı.");
+    }
 
-  const silmeIslemi = async (id) => {
+    if (!window.confirm("Bu banner'ı silmek istediğinizden emin misiniz?")) {
+      return;
+    }
+
     try {
-      const yanit = await postAPI("/dashboard/admin/generalTopPageBanner", {
-        id, // Silinecek banner'ın id'sini gönderiyoruz
-      });
+      // DELETE API isteği
+      const yanit = await fetch("/api/dashboard/admin/generalTopPageBanner", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: bannerVerisi.id, role: "admin" }), // Silme için gerekli veriler
+      }).then((res) => res.json());
 
       if (yanit.status === "success") {
         toast.success("Banner başarıyla silindi!");
+        setBannerVerisi({
+          mainText: "",
+          mainTextColor: "#000000",
+          underText: "",
+          underTextColor: "#333333",
+          buttonColor: "#0070f3",
+          backgroundColor: "#f0f0f0",
+          isActive: true,
+        }); // State'i sıfırla
       } else {
-        toast.error(yanit.error || "Silme işlemi başarısız");
+        toast.error(yanit.error || "Silme işlemi başarısız.");
       }
     } catch (hata) {
-      toast.error("Banner silinirken bir hata oluştu");
+      toast.error("Banner silinirken bir hata oluştu.");
     }
   };
 
